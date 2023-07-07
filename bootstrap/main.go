@@ -9,7 +9,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/pointlander/peg/tree"
+	"github.com/debugmiller/peg/tree"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 	   *Tree
 	  }*/
 	t.AddPackage("main")
-	t.AddImport("github.com/pointlander/peg/tree")
+	t.AddImport("github.com/debugmiller/peg/tree")
 	t.AddPeg("Peg")
 	t.AddState(`
  *tree.Tree
@@ -116,7 +116,7 @@ func main() {
 		addSequence(
 			func() { addName("Spacing") },
 			func() { addAction(`p.AddPackage("main")`) },
-			func() { addAction(`p.AddImport("github.com/pointlander/peg/tree")`) },
+			func() { addAction(`p.AddImport("github.com/debugmiller/peg/tree")`) },
 			func() { addAction(`p.AddPeg("Peg")`) },
 			func() { addAction(`p.AddState("*tree.Tree")`) },
 			func() { addStar(func() { addName("Action") }) },
