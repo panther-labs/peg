@@ -11,7 +11,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/pointlander/peg/tree"
+	"github.com/panther-labs/peg/tree"
 )
 
 func main() {

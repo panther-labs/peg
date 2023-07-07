@@ -10,7 +10,7 @@
 
 package main
 
-import "github.com/pointlander/peg/tree"
+import "github.com/panther-labs/peg/tree"
 
 # parser declaration
 
