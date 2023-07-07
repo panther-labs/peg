@@ -12,7 +12,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/pointlander/peg/tree"
+	"github.com/debugmiller/peg/tree"
 )
 
 //go:generate -command build go run build.go

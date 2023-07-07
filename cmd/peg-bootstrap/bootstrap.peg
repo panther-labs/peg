@@ -2,7 +2,7 @@
 # Adapted from peg.peg.
 
 Grammar		<- Spacing	{ p.AddPackage("main") }
-				{ p.AddImport("github.com/pointlander/peg/tree") }
+				{ p.AddImport("github.com/debugmiller/peg/tree") }
 				{ p.AddPeg("Peg");  p.AddState("*tree.Tree") }
 				Action* Definition* !.
 
