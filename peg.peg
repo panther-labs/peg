@@ -10,7 +10,7 @@
 
 package main
 
-import "github.com/debugmiller/peg/tree"
+import "github.com/panther-labs/peg/tree"
 
 # parser declaration
 
