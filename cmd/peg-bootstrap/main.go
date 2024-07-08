@@ -12,7 +12,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/debugmiller/peg/tree"
+	"github.com/panther-labs/peg/tree"
 )
 
 func main() {

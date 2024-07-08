@@ -5,7 +5,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/debugmiller/peg/tree"
+	"github.com/panther-labs/peg/tree"
 	"io"
 	"os"
 	"sort"
