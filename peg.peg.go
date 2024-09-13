@@ -374,30 +374,57 @@ search:
 	return translations
 }
 
-type parseError struct {
+type PegParseError struct {
 	p   *Peg
 	max token32
 }
 
-func (e *parseError) Error() string {
-	tokens, err := []token32{e.max}, "\n"
+type PegParseErrorStructured struct {
+	BeginLine   int
+	BeginSymbol int
+	EndLine     int
+	EndSymbol   int
+	NearSymbol  string
+	Message     string
+}
+
+func (e *PegParseError) ToStructuredErrors() []PegParseErrorStructured {
+	tokens := []token32{e.max}
 	positions, p := make([]int, 2*len(tokens)), 0
 	for _, token := range tokens {
 		positions[p], p = int(token.begin), p+1
 		positions[p], p = int(token.end), p+1
 	}
 	translations := translatePositions(e.p.buffer, positions)
+
+	individualErrs := make([]PegParseErrorStructured, 0, len(tokens))
+	for _, token := range tokens {
+		begin, end := int(token.begin), int(token.end)
+		individualErrs = append(individualErrs, PegParseErrorStructured{
+			NearSymbol:  rul3s[token.pegRule],
+			BeginLine:   translations[begin].line,
+			BeginSymbol: translations[begin].symbol,
+			EndLine:     translations[end].line,
+			EndSymbol:   translations[end].symbol,
+			Message:     strconv.Quote(string(e.p.buffer[begin:end])),
+		})
+	}
+	return individualErrs
+}
+
+func (e *PegParseError) Error() string {
+	err := "\n"
+	individualErrs := e.ToStructuredErrors()
 	format := "parse error near %v (line %v symbol %v - line %v symbol %v):\n%v\n"
 	if e.p.Pretty {
 		format = "parse error near \x1B[34m%v\x1B[m (line %v symbol %v - line %v symbol %v):\n%v\n"
 	}
-	for _, token := range tokens {
-		begin, end := int(token.begin), int(token.end)
+	for _, structuredErr := range individualErrs {
 		err += fmt.Sprintf(format,
-			rul3s[token.pegRule],
-			translations[begin].line, translations[begin].symbol,
-			translations[end].line, translations[end].symbol,
-			strconv.Quote(string(e.p.buffer[begin:end])))
+			structuredErr.NearSymbol,
+			structuredErr.BeginLine, structuredErr.BeginSymbol,
+			structuredErr.EndLine, structuredErr.EndSymbol,
+			structuredErr.Message)
 	}
 
 	return err
@@ -608,7 +635,7 @@ func (p *Peg) Init(options ...func(*Peg) error) error {
 			p.Trim(tokenIndex)
 			return nil
 		}
-		return &parseError{p, max}
+		return &PegParseError{p, max}
 	}
 
 	add := func(rule pegRule, begin uint32) {
